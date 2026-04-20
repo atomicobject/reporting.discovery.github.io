@@ -1,0 +1,2303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JIS Platform Reporting — Product Brief (v2)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* === DESIGN TOKENS === */
+    :root {
+      --atomic-red: #FD4F57;
+      --atomic-black: #4C4845;
+      --atomic-teal: #3295BD;
+      --atomic-purple: #A5488B;
+      --atomic-gold: #DCAD66;
+      --atomic-green: #4AA271;
+      --atomic-med-gray: #595959;
+      --atomic-light-gray: #C3C3C3;
+      --atomic-off-white: #F7F7F7;
+      --atomic-white: #FFFFFF;
+
+      --surface-page: #F7F7F7;
+      --surface-card: #FFFFFF;
+      --surface-section: #FD4F57;
+      --surface-info: #E8F4F8;
+      --surface-warn: #FFF8F0;
+
+      --font-heading: 'Merriweather', 'Georgia', serif;
+      --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --font-code: 'SF Mono', 'Monaco', 'Consolas', monospace;
+
+      --space-4: 16px;
+      --space-6: 24px;
+      --space-7: 30px;
+      --space-8: 40px;
+      --space-10: 60px;
+      --space-12: 80px;
+
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-full: 50%;
+
+      --shadow-sm: 0 4px 10px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 20px rgba(0,0,0,0.05);
+      --shadow-lg: 0 8px 20px rgba(0,0,0,0.12);
+    }
+
+    /* === RESET === */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--surface-page);
+      color: var(--atomic-black);
+      line-height: 1.6;
+    }
+
+    /* === SLIDES === */
+    .slide {
+      min-height: 100vh;
+      padding: var(--space-10) var(--space-12);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .slide-default { background: var(--surface-page); }
+    .slide-white   { background: var(--surface-card); }
+    .slide-section {
+      background: var(--surface-section);
+      align-items: center;
+      text-align: center;
+    }
+    .slide-section::before {
+      content: '';
+      position: absolute;
+      top: -100px; right: -100px;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      pointer-events: none;
+    }
+    .slide-section::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: -60px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.05);
+      pointer-events: none;
+    }
+
+    /* === TYPOGRAPHY === */
+    h1 {
+      font-family: var(--font-heading);
+      font-size: 56px;
+      font-weight: 700;
+      color: var(--atomic-red);
+      line-height: 1.15;
+      margin-bottom: var(--space-6);
+    }
+    .slide-title h1 { font-size: 64px; }
+    h2 {
+      font-family: var(--font-heading);
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--atomic-black);
+      line-height: 1.2;
+      margin-bottom: var(--space-6);
+      padding-left: var(--space-6);
+      border-left: 5px solid var(--atomic-red);
+    }
+    .slide-section h2 {
+      font-size: 56px;
+      color: var(--atomic-white);
+      border-left: none;
+      padding-left: 0;
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .slide-section.divider h2 { font-size: 72px; }
+    h3 {
+      font-family: var(--font-heading);
+      font-size: 26px;
+      font-weight: 400;
+      color: var(--atomic-med-gray);
+      margin-bottom: var(--space-4);
+    }
+    h4 {
+      font-family: var(--font-heading);
+      font-size: 21px;
+      font-weight: 700;
+      color: var(--atomic-black);
+      margin-bottom: 10px;
+    }
+    p, li {
+      font-size: 20px;
+      color: var(--atomic-black);
+      line-height: 1.65;
+    }
+    ul { padding-left: var(--space-6); }
+    li { margin-bottom: 10px; }
+
+    .subtitle {
+      font-size: 28px;
+      font-weight: 300;
+      color: var(--atomic-med-gray);
+      margin-bottom: var(--space-8);
+      max-width: 860px;
+    }
+    .key-message {
+      font-size: 28px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.92);
+      margin-top: var(--space-6);
+      max-width: 900px;
+      line-height: 1.4;
+    }
+    .section-eyebrow {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--atomic-red);
+      margin-bottom: 14px;
+    }
+    .slide-section .section-eyebrow { color: rgba(255,255,255,0.85); }
+
+    /* === GRID === */
+    .grid { display: grid; gap: 28px; margin-top: var(--space-7); }
+    .grid-2 { grid-template-columns: 1fr 1fr; }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+    /* === CARDS === */
+    .card {
+      background: var(--surface-card);
+      border-radius: var(--radius-lg);
+      padding: var(--space-7);
+      box-shadow: var(--shadow-md);
+      border-top: 4px solid var(--atomic-teal);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .card.red    { border-top-color: var(--atomic-red); }
+    .card.gold   { border-top-color: var(--atomic-gold); }
+    .card.purple { border-top-color: var(--atomic-purple); }
+    .card.green  { border-top-color: var(--atomic-green); }
+    .card.muted  { border-top-color: var(--atomic-light-gray); }
+    .card h4     { margin-bottom: 8px; }
+    .card p      { font-size: 16px; color: var(--atomic-med-gray); margin-top: 6px; line-height: 1.55; }
+    .card-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; color: var(--atomic-teal); margin-bottom: 6px; }
+    .card.red    .card-eyebrow { color: var(--atomic-red); }
+    .card.gold   .card-eyebrow { color: var(--atomic-gold); }
+    .card.purple .card-eyebrow { color: var(--atomic-purple); }
+    .card.green  .card-eyebrow { color: var(--atomic-green); }
+    .card.muted  .card-eyebrow { color: var(--atomic-light-gray); }
+
+    /* === COLUMN COMPARISON === */
+    .column-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      margin-top: var(--space-7);
+    }
+    .col-card {
+      background: var(--surface-card);
+      border-radius: var(--radius-lg);
+      padding: var(--space-8);
+      box-shadow: var(--shadow-md);
+    }
+    .col-card.a { border-top: 5px solid var(--atomic-teal); }
+    .col-card.b { border-top: 5px solid var(--atomic-purple); }
+    .col-header {
+      font-family: var(--font-heading);
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: var(--space-4);
+    }
+    .col-card.a .col-header { color: var(--atomic-teal); }
+    .col-card.b .col-header { color: var(--atomic-purple); }
+    .col-card p, .col-card li { font-size: 17px; line-height: 1.6; }
+    .col-card p + p { margin-top: 12px; }
+
+    /* === CALLOUT === */
+    .callout {
+      background: var(--surface-info);
+      border-left: 5px solid var(--atomic-teal);
+      border-radius: var(--radius-md);
+      padding: var(--space-7);
+      margin-top: var(--space-7);
+      max-width: 940px;
+    }
+    .callout.warn { background: var(--surface-warn); border-left-color: var(--atomic-gold); }
+    .callout.red  { background: #FDECEE; border-left-color: var(--atomic-red); }
+    .callout p { font-size: 19px; color: var(--atomic-black); line-height: 1.55; }
+    .callout-label { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; color: var(--atomic-teal); }
+    .callout.warn .callout-label { color: var(--atomic-gold); }
+    .callout.red  .callout-label { color: var(--atomic-red); }
+
+    /* === TITLE SLIDE === */
+    .slide-title { background: var(--surface-card); }
+    .title-meta {
+      margin-top: var(--space-7);
+      padding-top: var(--space-6);
+      border-top: 1px solid var(--atomic-light-gray);
+      display: flex;
+      gap: var(--space-8);
+      flex-wrap: wrap;
+    }
+    .title-meta-item { font-size: 15px; color: var(--atomic-med-gray); }
+    .title-meta-label { font-weight: 700; color: var(--atomic-black); display: block; margin-bottom: 2px; }
+
+    /* === TABLE OF CONTENTS === */
+    .toc-list {
+      margin-top: var(--space-7);
+      max-width: 860px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .toc-item {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      padding: 18px 24px;
+      background: var(--surface-card);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      text-decoration: none;
+      color: inherit;
+      border-left: 4px solid var(--atomic-red);
+      transition: transform 0.15s, box-shadow 0.15s, border-left-color 0.15s;
+    }
+    .toc-item:hover {
+      transform: translateX(4px);
+      box-shadow: var(--shadow-md);
+      border-left-color: var(--atomic-black);
+    }
+    .toc-number {
+      font-family: var(--font-code);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--atomic-red);
+      min-width: 48px;
+      letter-spacing: 1px;
+    }
+    .toc-title {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 19px;
+      color: var(--atomic-black);
+      line-height: 1.3;
+    }
+    .toc-desc {
+      font-size: 14px;
+      color: var(--atomic-med-gray);
+      margin-top: 3px;
+      line-height: 1.5;
+    }
+    .toc-footnote {
+      margin-top: var(--space-6);
+      max-width: 860px;
+      font-size: 14px;
+      color: var(--atomic-med-gray);
+      font-style: italic;
+    }
+
+    /* === NUMBERED LIST === */
+    .numbered-list { margin-top: var(--space-7); }
+    .numbered-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      background: var(--surface-card);
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 12px;
+    }
+    .numbered-badge {
+      min-width: 36px; height: 36px;
+      border-radius: var(--radius-full);
+      background: var(--atomic-red);
+      color: white;
+      font-size: 15px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .numbered-badge.gold   { background: var(--atomic-gold); }
+    .numbered-badge.teal   { background: var(--atomic-teal); }
+    .numbered-badge.purple { background: var(--atomic-purple); }
+    .numbered-badge.green  { background: var(--atomic-green); }
+    .numbered-item h4 { font-size: 17px; margin-bottom: 3px; }
+    .numbered-item p  { font-size: 14px; color: var(--atomic-med-gray); line-height: 1.5; }
+
+    /* === PAIN POINT LIST === */
+    .pain-list { margin-top: var(--space-7); max-width: 920px; }
+    .pain-item {
+      display: flex;
+      gap: 22px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--atomic-light-gray);
+    }
+    .pain-item:last-child { border-bottom: none; }
+    .pain-court {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--atomic-red);
+      min-width: 160px;
+    }
+    .pain-detail { font-size: 17px; color: var(--atomic-black); line-height: 1.55; }
+
+    /* === COMPARISON TABLE (D&A slide) === */
+    .compare-table {
+      margin-top: var(--space-7);
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: var(--surface-card);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    .compare-table th {
+      background: var(--atomic-off-white);
+      font-family: var(--font-heading);
+      font-size: 15px;
+      font-weight: 700;
+      text-align: left;
+      padding: 16px 22px;
+      color: var(--atomic-black);
+      border-bottom: 2px solid var(--atomic-light-gray);
+    }
+    .compare-table td {
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--atomic-off-white);
+      vertical-align: top;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table .mode-name { font-weight: 700; font-size: 17px; color: var(--atomic-black); white-space: nowrap; }
+    .compare-table .complexity {
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .compare-table .complexity.easy { color: var(--atomic-green); }
+    .compare-table .complexity.hard { color: var(--atomic-red); }
+
+    /* === WIDE TECH LANDSCAPE TABLE === */
+    .tech-table {
+      margin-top: var(--space-6);
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: var(--surface-card);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      font-size: 12.5px;
+    }
+    .tech-table th {
+      background: var(--atomic-black);
+      color: white;
+      font-family: var(--font-heading);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      text-align: left;
+      padding: 12px 14px;
+    }
+    .tech-table th.category-col {
+      background: var(--atomic-med-gray);
+      width: 130px;
+    }
+    .tech-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--atomic-off-white);
+      vertical-align: top;
+      color: var(--atomic-black);
+      line-height: 1.45;
+    }
+    .tech-table tr:last-child td { border-bottom: none; }
+    .tech-table td.category-cell {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      color: var(--atomic-black);
+      background: var(--atomic-off-white);
+      font-size: 13px;
+    }
+    .tech-table .odyssey-highlight {
+      color: var(--atomic-purple);
+      font-weight: 700;
+    }
+    .tech-table .forked-highlight {
+      color: var(--atomic-red);
+      font-weight: 700;
+    }
+    .tech-footnote {
+      margin-top: 14px;
+      padding: 14px 18px;
+      background: var(--surface-warn);
+      border-left: 3px solid var(--atomic-gold);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      color: var(--atomic-med-gray);
+      line-height: 1.5;
+      font-style: italic;
+      max-width: 100%;
+    }
+
+    /* === MATURITY SUMMARY TABLE === */
+    .maturity-table {
+      margin-top: var(--space-6);
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: var(--surface-card);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    .maturity-table th {
+      background: var(--atomic-black);
+      color: white;
+      font-family: var(--font-heading);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-align: left;
+      padding: 14px 20px;
+    }
+    .maturity-table td {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--atomic-off-white);
+      vertical-align: top;
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--atomic-black);
+    }
+    .maturity-table tr:last-child td { border-bottom: none; }
+    .maturity-table .court-name {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      color: var(--atomic-red);
+      font-size: 16px;
+      white-space: nowrap;
+    }
+    .maturity-table .maturity-cell {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .maturity-table .maturity-cell.mature    { color: var(--atomic-red); }
+    .maturity-table .maturity-cell.partial   { color: var(--atomic-gold); }
+    .maturity-table .maturity-cell.manual    { color: var(--atomic-teal); }
+    .maturity-table .maturity-cell.broken    { color: var(--atomic-purple); }
+    .maturity-table .maturity-cell.fully-manual { color: var(--atomic-med-gray); }
+
+    /* === TAXONOMY AXES + 2×2 MATRIX === */
+    .axes-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      margin-top: var(--space-7);
+    }
+    .axis-card {
+      background: var(--surface-card);
+      border-radius: var(--radius-lg);
+      padding: 26px 30px;
+      box-shadow: var(--shadow-md);
+      border-top: 5px solid var(--atomic-teal);
+    }
+    .axis-card.gold { border-top-color: var(--atomic-gold); }
+    .axis-label {
+      font-family: var(--font-heading);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--atomic-teal);
+      margin-bottom: 4px;
+    }
+    .axis-card.gold .axis-label { color: var(--atomic-gold); }
+    .axis-question {
+      font-size: 14px;
+      font-style: italic;
+      color: var(--atomic-med-gray);
+      margin-bottom: 16px;
+    }
+    .axis-option {
+      font-size: 16px;
+      color: var(--atomic-black);
+      line-height: 1.5;
+      padding: 10px 0;
+      border-top: 1px solid var(--atomic-off-white);
+    }
+    .axis-option:first-of-type { border-top: none; padding-top: 0; }
+
+    .taxonomy-matrix {
+      margin-top: var(--space-6);
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: var(--surface-card);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    .taxonomy-matrix th {
+      font-family: var(--font-heading);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      text-align: left;
+      padding: 16px 22px;
+      color: white;
+    }
+    .taxonomy-matrix th.corner { background: transparent; }
+    .taxonomy-matrix th.col-standard { background: var(--atomic-teal); }
+    .taxonomy-matrix th.col-custom   { background: var(--atomic-purple); }
+    .taxonomy-matrix th.row-header {
+      background: var(--atomic-off-white);
+      color: var(--atomic-black);
+      width: 140px;
+      vertical-align: middle;
+    }
+    .taxonomy-matrix th.row-scheduled { border-left: 5px solid var(--atomic-gold); }
+    .taxonomy-matrix th.row-adhoc     { border-left: 5px solid var(--atomic-red); }
+    .taxonomy-matrix td {
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--atomic-off-white);
+      border-left: 1px solid var(--atomic-off-white);
+      vertical-align: top;
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--atomic-black);
+    }
+    .taxonomy-matrix tr:last-child td,
+    .taxonomy-matrix tr:last-child th.row-header { border-bottom: none; }
+    .taxonomy-matrix td .quadrant-label {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--atomic-black);
+      display: block;
+      margin-bottom: 6px;
+    }
+    .taxonomy-matrix td.empty-quadrant {
+      background: repeating-linear-gradient(45deg, #F7F7F7, #F7F7F7 8px, #EAEAEA 8px, #EAEAEA 16px);
+      color: var(--atomic-med-gray);
+      font-style: italic;
+      text-align: center;
+      padding: 20px;
+    }
+    .taxonomy-matrix td.empty-quadrant .quadrant-label {
+      color: var(--atomic-light-gray);
+      font-style: normal;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-size: 11px;
+      font-family: var(--font-code);
+      margin-bottom: 8px;
+    }
+
+    /* === ARCHITECTURE FLOW DIAGRAMS === */
+    .flow-diagram {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: var(--space-6);
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding-top: 22px;
+      padding-bottom: 4px;
+    }
+    .flow-diagram.compact { margin-top: var(--space-4); }
+    .flow-group {
+      border: 1.5px dashed var(--atomic-light-gray);
+      border-radius: var(--radius-md);
+      padding: 16px 14px 14px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(247, 247, 247, 0.5);
+      flex-shrink: 0;
+    }
+    .flow-group-label {
+      position: absolute;
+      top: -20px;
+      left: 4px;
+      background: transparent;
+      padding: 0;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--atomic-teal);
+    }
+    .flow-group.highlight-gold {
+      border-color: var(--atomic-gold);
+      background: #FFF8E6;
+    }
+    .flow-group.highlight-gold .flow-group-label { color: var(--atomic-gold); }
+    .flow-group.highlight-red .flow-group-label { color: var(--atomic-red); }
+    .flow-node {
+      background: var(--surface-card);
+      border: 1.5px solid var(--atomic-black);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      font-size: 12px;
+      line-height: 1.35;
+      color: var(--atomic-black);
+      text-align: center;
+      min-width: 110px;
+      max-width: 170px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 58px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .flow-node-sub {
+      font-size: 10px;
+      color: var(--atomic-med-gray);
+      font-weight: 400;
+      margin-top: 3px;
+      line-height: 1.3;
+    }
+    .flow-node.highlight-gold {
+      background: var(--surface-card);
+      border-color: var(--atomic-black);
+    }
+    .flow-arrow {
+      color: var(--atomic-med-gray);
+      font-size: 18px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .flow-arrow-bi { font-size: 16px; letter-spacing: -2px; }
+    .flow-branch {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    /* JIS Platform Reporting now uses the .flow-group styling (gray bg, teal label)
+       via a simple wrapper class. Capability list styling preserved for the inner content. */
+    .flow-capability-list {
+      padding-left: 0;
+      list-style: none;
+      margin: 0;
+      min-width: 230px;
+      max-width: 270px;
+    }
+    .flow-capability-list li {
+      font-size: 11px;
+      color: var(--atomic-black);
+      line-height: 1.4;
+      padding: 4px 0;
+      font-weight: 700;
+      margin: 0;
+      border-top: 1px solid var(--atomic-light-gray);
+    }
+    .flow-capability-list li:first-child { border-top: none; padding-top: 0; }
+    .flow-capability-list li span {
+      color: var(--atomic-med-gray);
+      font-weight: 400;
+      display: block;
+      font-size: 10px;
+      margin-top: 2px;
+    }
+    /* Target State grid: main flow + vertical connectors + parallel path */
+    .target-flow-grid {
+      display: grid;
+      grid-template-columns: repeat(9, auto);
+      align-items: center;
+      column-gap: 10px;
+      row-gap: 4px;
+      margin-top: var(--space-6);
+      padding-top: 22px;
+      overflow-x: auto;
+    }
+    .target-flow-grid .flow-group.parallel-path {
+      justify-content: center;
+      gap: 8px;
+    }
+    .parallel-inner-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0;
+      background: transparent;
+    }
+    .grid-connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 0;
+      gap: 0;
+      min-height: 44px;
+    }
+    .grid-connector .conn-line {
+      width: 3px;
+      height: 22px;
+      background: var(--atomic-black);
+      flex-shrink: 0;
+    }
+    .grid-connector .conn-arrow {
+      color: var(--atomic-black);
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1;
+      display: block;
+    }
+    .grid-connector.up { flex-direction: column-reverse; }
+
+    /* === CASE LIFECYCLE (elaborate 4-phase diagram) === */
+    .case-lifecycle {
+      margin-top: var(--space-6);
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      width: 100%;
+      overflow-x: auto;
+    }
+    .phase-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-width: 0;
+    }
+    .phase-header {
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--atomic-black);
+      background: var(--surface-card);
+      color: var(--atomic-black);
+      text-align: center;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 15px;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-sm);
+    }
+    .phase-subtasks {
+      display: flex;
+      align-items: stretch;
+      gap: 4px;
+    }
+    .subtask {
+      flex: 1;
+      min-width: 0;
+      padding: 10px 8px;
+      background: var(--surface-card);
+      border: 1px solid var(--atomic-light-gray);
+      border-radius: var(--radius-sm);
+      font-size: 10.5px;
+      line-height: 1.35;
+      color: var(--atomic-black);
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 58px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .subtask:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .subtask-arrow {
+      display: flex;
+      align-items: center;
+      color: var(--atomic-med-gray);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 0 1px;
+    }
+    .phase-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--atomic-med-gray);
+      font-size: 20px;
+      font-weight: 700;
+      height: 48px;
+      padding: 0 4px;
+      flex-shrink: 0;
+    }
+
+    /* Color-coded phase variants */
+    .phase-col.teal   .phase-header { background: var(--atomic-teal);   border-color: var(--atomic-teal);   color: var(--atomic-white); }
+    .phase-col.gold   .phase-header { background: var(--atomic-gold);   border-color: var(--atomic-gold);   color: var(--atomic-black); }
+    .phase-col.purple .phase-header { background: var(--atomic-purple); border-color: var(--atomic-purple); color: var(--atomic-white); }
+    .phase-col.red    .phase-header { background: var(--atomic-red);    border-color: var(--atomic-red);    color: var(--atomic-white); }
+
+    .phase-col.teal   .subtask { border-top: 3px solid var(--atomic-teal); }
+    .phase-col.gold   .subtask { border-top: 3px solid var(--atomic-gold); }
+    .phase-col.purple .subtask { border-top: 3px solid var(--atomic-purple); }
+    .phase-col.red    .subtask { border-top: 3px solid var(--atomic-red); }
+
+    /* === PERSONA GRID (2x2) === */
+    .persona-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: var(--space-7); }
+    .persona {
+      background: var(--surface-card);
+      border-radius: var(--radius-lg);
+      padding: 26px 30px;
+      box-shadow: var(--shadow-md);
+      border-left: 5px solid var(--atomic-teal);
+    }
+    .persona.primary   { border-left-color: var(--atomic-red); }
+    .persona.secondary { border-left-color: var(--atomic-gold); }
+    .persona.tertiary  { border-left-color: var(--atomic-light-gray); }
+    .persona-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: var(--atomic-teal);
+      margin-bottom: 6px;
+    }
+    .persona.primary   .persona-label { color: var(--atomic-red); }
+    .persona.secondary .persona-label { color: var(--atomic-gold); }
+    .persona.tertiary  .persona-label { color: var(--atomic-med-gray); }
+    .persona h4 { font-size: 19px; margin-bottom: 10px; }
+    .persona p  { font-size: 15px; color: var(--atomic-med-gray); line-height: 1.55; }
+
+    /* === PERSONA DETAIL LAYOUT (image + description) === */
+    .persona-detail {
+      display: flex;
+      align-items: stretch;
+      gap: var(--space-8);
+      margin-top: var(--space-7);
+      max-width: 1100px;
+    }
+    .persona-image {
+      flex-shrink: 0;
+      width: 260px;
+      height: 300px;
+      border-radius: var(--radius-lg);
+      background: var(--atomic-off-white);
+      border: 2px dashed var(--atomic-light-gray);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: var(--atomic-light-gray);
+    }
+    .persona-image svg { width: 100px; height: 100px; opacity: 0.55; }
+    .persona-image.primary   { border-color: var(--atomic-red);  color: var(--atomic-red); }
+    .persona-image.primary svg { opacity: 0.85; }
+    .persona-image.secondary { border-color: var(--atomic-gold); color: var(--atomic-gold); }
+    .persona-image.secondary svg { opacity: 0.85; }
+    .persona-image .placeholder-label {
+      font-family: var(--font-code);
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+    .persona-detail-content { flex: 1; min-width: 0; padding: 4px 0; }
+    .persona-detail-content .persona-kicker {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: var(--atomic-teal);
+      margin-bottom: 8px;
+    }
+    .persona-detail-content .persona-kicker.primary   { color: var(--atomic-red); }
+    .persona-detail-content .persona-kicker.secondary { color: var(--atomic-gold); }
+    .persona-detail-content .persona-kicker.tertiary  { color: var(--atomic-med-gray); }
+    .persona-detail-content h3 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--atomic-black);
+      margin-bottom: 14px;
+      line-height: 1.2;
+    }
+    .persona-detail-content p {
+      font-size: 17px;
+      color: var(--atomic-black);
+      line-height: 1.6;
+      max-width: 640px;
+    }
+
+    /* Two-tertiary layout: smaller images, side by side */
+    .tertiary-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-7);
+      margin-top: var(--space-7);
+    }
+    .tertiary-pair .persona-detail {
+      gap: var(--space-6);
+      margin-top: 0;
+      max-width: 100%;
+    }
+    .tertiary-pair .persona-image {
+      width: 140px;
+      height: 180px;
+    }
+    .tertiary-pair .persona-image svg { width: 58px; height: 58px; }
+    .tertiary-pair .persona-image .placeholder-label { font-size: 9px; }
+    .tertiary-pair .persona-detail-content h3 { font-size: 21px; margin-bottom: 10px; }
+    .tertiary-pair .persona-detail-content p { font-size: 15px; line-height: 1.55; }
+
+    /* === PLACEHOLDER BOX === */
+    .placeholder-box {
+      background: repeating-linear-gradient(45deg, #F7F7F7, #F7F7F7 10px, #EAEAEA 10px, #EAEAEA 20px);
+      border: 2px dashed var(--atomic-light-gray);
+      border-radius: var(--radius-lg);
+      padding: 60px 40px;
+      margin: var(--space-7) auto 0;
+      max-width: 820px;
+      text-align: center;
+    }
+    .placeholder-label {
+      font-family: var(--font-code);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--atomic-light-gray);
+      margin-bottom: 10px;
+    }
+    .placeholder-text {
+      font-size: 16px;
+      font-style: italic;
+      color: var(--atomic-med-gray);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* === ACCESS CHAIN === */
+    .access-chain {
+      margin-top: var(--space-6);
+      max-width: 940px;
+      font-family: var(--font-code);
+      font-size: 16px;
+      color: var(--atomic-black);
+      background: var(--atomic-off-white);
+      padding: 20px 24px;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* === SLIDE NUMBER === */
+    .slide-number {
+      position: absolute;
+      bottom: 28px;
+      left: var(--space-12);
+      font-family: var(--font-code);
+      font-size: 12px;
+      color: var(--atomic-light-gray);
+      letter-spacing: 1.5px;
+    }
+    .slide-section .slide-number { color: rgba(255,255,255,0.4); }
+
+    /* === NAV PILL === */
+    .slide-nav {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      font-size: 13px;
+      color: var(--atomic-med-gray);
+      background: rgba(255,255,255,0.95);
+      padding: 10px 16px;
+      border-radius: 24px;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+      font-weight: 600;
+      min-width: 140px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .slide-nav-version {
+      display: inline-block;
+      background: var(--atomic-red);
+      color: white;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      padding: 2px 7px;
+      border-radius: 10px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    .slide-nav-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .slide-nav-timer {
+      font-family: var(--font-code);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: var(--atomic-med-gray);
+      opacity: 0.7;
+    }
+    .slide-nav-tracks { display: flex; flex-direction: column; gap: 3px; margin-top: 7px; }
+    .slide-nav-track {
+      height: 2px;
+      border-radius: 1px;
+      background: rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    .slide-nav-track-fill { height: 100%; border-radius: 1px; transition: width 0.4s ease; }
+    #slide-progress-fill { background: var(--atomic-light-gray); width: 2%; }
+    #countdown-timer { transition: color 1s ease; }
+    .slide-nav-help { font-size: 10px; margin-top: 5px; opacity: 0.45; font-weight: 400; }
+
+    /* === SCROLL REVEAL === */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.10s; }
+    .reveal-delay-2 { transition-delay: 0.20s; }
+    .reveal-delay-3 { transition-delay: 0.32s; }
+    .reveal-delay-4 { transition-delay: 0.44s; }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 1024px) {
+      .slide { padding: 60px 48px; }
+      h1 { font-size: 44px; }
+      .slide-title h1 { font-size: 52px; }
+      h2 { font-size: 34px; }
+      .slide-section h2 { font-size: 44px; }
+      .slide-section.divider h2 { font-size: 56px; }
+      .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; }
+      .tech-table { font-size: 11px; }
+      .tech-table th, .tech-table td { padding: 10px 10px; }
+    }
+    @media (max-width: 768px) {
+      .slide { padding: 48px 24px; min-height: auto; padding-bottom: 60px; }
+      h1 { font-size: 34px; }
+      .slide-title h1 { font-size: 40px; }
+      h2 { font-size: 28px; }
+      .slide-section h2 { font-size: 34px; }
+      .slide-section.divider h2 { font-size: 44px; }
+      .grid-2, .grid-3, .grid-4, .column-cards, .persona-grid { grid-template-columns: 1fr; gap: 20px; }
+      .pain-item { flex-direction: column; gap: 6px; }
+      .pain-court { min-width: auto; }
+      .tech-table, .maturity-table { display: block; overflow-x: auto; }
+      .lifecycle-flow { flex-direction: column; align-items: flex-start; }
+      .lifecycle-arrow { transform: rotate(90deg); }
+    }
+
+    /* === PRINT / PDF FALLBACK === */
+    @media print {
+      @page { size: 1280px 720px; margin: 0; }
+      body { overflow: visible; }
+      .slide-nav { display: none !important; }
+      .slide {
+        min-height: 100vh;
+        height: 100vh;
+        page-break-after: always;
+        break-after: page;
+        overflow: hidden;
+        box-sizing: border-box;
+      }
+      .slide:last-of-type { page-break-after: avoid; break-after: avoid; }
+      .reveal, .reveal.visible {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="slide-nav" id="slide-nav">
+  <div class="slide-nav-top">
+    <span id="slide-counter">1 / 1</span>
+  </div>
+  <div class="slide-nav-tracks">
+    <div class="slide-nav-track">
+      <div class="slide-nav-track-fill" id="slide-progress-fill"></div>
+    </div>
+  </div>
+  <div class="slide-nav-help">Scroll to navigate</div>
+</div>
+
+<!-- ============================================================
+  01 — TITLE
+============================================================ -->
+<section class="slide slide-title" id="slide-1">
+  <div class="section-eyebrow reveal">Atomic Object Internal Workshop · April 2026</div>
+  <h1 class="reveal reveal-delay-1">JIS Platform<br>Reporting</h1>
+  <p class="subtitle reveal reveal-delay-2">
+    A pre-read for the workshop. What the reporting work stream is, why Oakland gates it, and what we know today.
+  </p>
+  <div class="title-meta reveal reveal-delay-3">
+    <div class="title-meta-item">
+      <span class="title-meta-label">Authors</span>
+      Linda Imirzian, Dan Maser
+    </div>
+    <div class="title-meta-item">
+      <span class="title-meta-label">Product</span>
+      Platform Reporting Tool
+    </div>
+    <div class="title-meta-item">
+      <span class="title-meta-label">Engagement</span>
+      May 1, 2026 – April 30, 2027
+    </div>
+  </div>
+  <span class="slide-number">01</span>
+</section>
+
+<!-- ============================================================
+  02 — HOW TO READ THIS
+============================================================ -->
+<section class="slide slide-default" id="slide-2">
+  <div class="section-eyebrow reveal">How to Read This</div>
+  <h2 class="reveal reveal-delay-1">A Pre-Read Before the Workshop</h2>
+  <p class="reveal reveal-delay-2" style="max-width:820px; font-size:22px; margin-top:10px;">
+    Read it before the workshop so we can dive into meaningful discussion.
+  </p>
+  <p class="reveal reveal-delay-3" style="max-width:820px; color:var(--atomic-med-gray); margin-top:18px;">
+    Feel free to come with — or pre-send — questions to Dan and Linda. The <a href="https://docs.google.com/document/d/1WHa_WH17f8VbE5Qdcqlswd7y-cf9GoSI/edit?usp=drive_link&amp;ouid=107285503379251581198&amp;rtpof=true&amp;sd=true" target="_blank" rel="noopener" style="color:var(--atomic-teal); text-decoration:underline; font-weight:600;">accompanying worksheet</a> has specific questions to think about before the workshop as well.
+  </p>
+  <span class="slide-number">02</span>
+</section>
+
+<!-- ============================================================
+  03 — TABLE OF CONTENTS
+============================================================ -->
+<section class="slide slide-default" id="slide-3">
+  <div class="section-eyebrow reveal">Table of Contents</div>
+  <h2 class="reveal reveal-delay-1">What's in This Pre-Read</h2>
+  <p class="reveal reveal-delay-2" style="max-width:860px; color:var(--atomic-med-gray); margin-top:4px;">
+    Five parts. Click any section to jump there.
+  </p>
+  <div class="toc-list reveal reveal-delay-3">
+    <a href="#slide-4" class="toc-item">
+      <div class="toc-number">01</div>
+      <div>
+        <div class="toc-title">High-Level Context</div>
+        <div class="toc-desc">The gap JIS is filling, two kinds of reports, standard vs. ad hoc, and why Oakland gates everything</div>
+      </div>
+    </a>
+    <a href="#slide-17" class="toc-item">
+      <div class="toc-number">02</div>
+      <div>
+        <div class="toc-title">JIS Business Value Delivery &amp; Our (Atomic's) Goals</div>
+        <div class="toc-desc">Why this matters to JIS, what the contract commits us to, and what success looks like for Atomic</div>
+      </div>
+    </a>
+    <a href="#slide-21" class="toc-item">
+      <div class="toc-number">03</div>
+      <div>
+        <div class="toc-title">Current State</div>
+        <div class="toc-desc">Five courts, five maturity levels. Tooling, maturity, and what each court has today</div>
+      </div>
+    </a>
+    <a href="#slide-30" class="toc-item">
+      <div class="toc-number">04</div>
+      <div>
+        <div class="toc-title">User Personas</div>
+        <div class="toc-desc">One primary user, one Oakland-specific admin, and two tertiary audiences</div>
+      </div>
+    </a>
+    <a href="#slide-34" class="toc-item">
+      <div class="toc-number">05</div>
+      <div>
+        <div class="toc-title">Known Risks</div>
+        <div class="toc-desc">The biggest unknown (D&amp;A collaboration), plus seven more to watch</div>
+      </div>
+    </a>
+  </div>
+  <span class="slide-number">03</span>
+</section>
+
+<!-- ============================================================
+  04 — HIGH-LEVEL CONTEXT (hero)
+============================================================ -->
+<section class="slide slide-section" id="slide-4">
+  <div class="section-eyebrow reveal">High-Level Context</div>
+  <h2 class="reveal reveal-delay-1">JIS Is Planning for a Future-State Reporting Infrastructure.</h2>
+  <p class="key-message reveal reveal-delay-2">
+    Large courts have built fragile, court-specific reporting workarounds to fill the gap. Oakland's onboarding, JIS's top organizational priority, is gated on a credible reporting solution.
+  </p>
+  <span class="slide-number">04</span>
+</section>
+
+<!-- ============================================================
+  04 — DISCOVERY SCOPE
+============================================================ -->
+<section class="slide slide-white" id="slide-5">
+  <div class="section-eyebrow reveal">Discovery Scope</div>
+  <h2 class="reveal reveal-delay-1">Five Large Michigan Courts</h2>
+  <p class="reveal reveal-delay-2" style="max-width:900px; margin-top:10px;">
+    The following is based on discovery research conducted across five large Michigan courts: <strong>Oakland, Kent, Macomb, and Wayne Circuit</strong> circuit courts, and <strong>D36 Detroit</strong> district court.
+  </p>
+  <p class="reveal reveal-delay-3" style="max-width:900px; color:var(--atomic-med-gray); margin-top:14px;">
+    These findings reflect the reporting landscape at large, high-volume courts specifically. Smaller courts may have different needs and constraints that are not yet well understood.
+  </p>
+  <span class="slide-number">05</span>
+</section>
+
+<!-- ============================================================
+  06 — THE COURT CASE LIFECYCLE
+============================================================ -->
+<section class="slide slide-default" id="slide-6">
+  <div class="section-eyebrow reveal">Context</div>
+  <h2 class="reveal reveal-delay-1">The Court Case Lifecycle</h2>
+  <p class="reveal reveal-delay-2" style="max-width:940px; margin-top:8px;">
+    A simplified view of the case lifecycle that reporting touches — four phases, each with a handful of sub-tasks.
+  </p>
+  <div class="case-lifecycle reveal reveal-delay-3">
+    <div class="phase-col teal">
+      <div class="phase-header">Case Initiation</div>
+      <div class="phase-subtasks">
+        <div class="subtask">Case Filed</div>
+        <span class="subtask-arrow">→</span>
+        <div class="subtask">Manual Entry into CMS</div>
+        <span class="subtask-arrow">→</span>
+        <div class="subtask">Case Number Assigned</div>
+        <span class="subtask-arrow">→</span>
+        <div class="subtask">Judge Assigned via Blind Draw</div>
+      </div>
+    </div>
+    <span class="phase-arrow">→</span>
+    <div class="phase-col gold">
+      <div class="phase-header">Scheduling</div>
+      <div class="phase-subtasks">
+        <div class="subtask">First Appearance Set by Clerk</div>
+        <span class="subtask-arrow">→</span>
+        <div class="subtask">Judge Rules Applied from Paper Cheat Sheets</div>
+        <span class="subtask-arrow">→</span>
+        <div class="subtask">Hearing Scheduled in CMS</div>
+      </div>
+    </div>
+    <span class="phase-arrow">→</span>
+    <div class="phase-col purple">
+      <div class="phase-header">Docket Management</div>
+      <div class="phase-subtasks">
+        <div class="subtask">Documents Filed or Generated</div>
+        <span class="subtask-arrow">→</span>
+        <div class="subtask">Physical File Tracked Manually OR Scanned to DMS and Event Linked</div>
+        <span class="subtask-arrow">→</span>
+        <div class="subtask">Notices Sent</div>
+      </div>
+    </div>
+    <span class="phase-arrow">→</span>
+    <div class="phase-col red">
+      <div class="phase-header">Reporting</div>
+      <div class="phase-subtasks">
+        <div class="subtask">Activity Logged in CMS</div>
+        <span class="subtask-arrow">→</span>
+        <div class="subtask">CMS "Canned" Reports OR Supplemental "Custom" Reports</div>
+        <span class="subtask-arrow">→</span>
+        <div class="subtask">Case Disposition</div>
+      </div>
+    </div>
+  </div>
+  <div class="callout reveal reveal-delay-4">
+    <div class="callout-label">A caveat on the diagram</div>
+    <p>Reporting is shown here as a downstream step for simplicity, but in practice it is not fully downstream. <strong>Operational reports are sprinkled throughout the lifecycle</strong> (supporting scheduling, docket management, etc.), while statistical and compliance reports draw from the full lifecycle after the fact.</p>
+  </div>
+  <span class="slide-number">06</span>
+</section>
+
+<!-- ============================================================
+  07 — TWO KINDS OF REPORTING
+============================================================ -->
+<section class="slide slide-white" id="slide-7">
+  <div class="section-eyebrow reveal">Two Jobs, One Word</div>
+  <h2 class="reveal reveal-delay-1">Large Courts Use "Reports" for Two Different Jobs</h2>
+  <div class="column-cards reveal reveal-delay-2">
+    <div class="col-card a">
+      <div class="col-header">Operational Reports</div>
+      <p>Drive daily case processing workflows. Staff use them as <strong>work queues</strong> to determine what needs to be done.</p>
+      <p><strong>Examples:</strong> cases eligible for dismissal, notices that need to go out, docket entries that need correction.</p>
+    </div>
+    <div class="col-card b">
+      <div class="col-header">Statistical &amp; Compliance Reports</div>
+      <p>Serve state-required submissions (such as MCAP), quarterly caseload memos, case age tracking, and other measurement and accountability requirements.</p>
+      <p style="font-size:14px; color:var(--atomic-med-gray); font-style:italic;">Note: confirm whether MCAP is the submission tool or a specific report.</p>
+    </div>
+  </div>
+  <span class="slide-number">07</span>
+</section>
+
+<!-- ============================================================
+  08 — REPORTING TAXONOMY: TWO CONCEPTS (TIMING × TYPE)
+============================================================ -->
+<section class="slide slide-default" id="slide-8">
+  <div class="section-eyebrow reveal">A Distinction That Matters</div>
+  <h2 class="reveal reveal-delay-1">Reporting Taxonomy: Timing × Type</h2>
+  <p class="reveal reveal-delay-2" style="max-width:980px; margin-top:6px;">
+    Reports vary along two concepts: <strong>timing</strong> (when it runs) and <strong>type</strong> (who built it). Each concept defines a clean binary. <span style="color:var(--atomic-med-gray);">On the next slide: how these two concepts combine into three real categories.</span>
+  </p>
+  <div class="axes-grid reveal reveal-delay-3">
+    <div class="axis-card">
+      <div class="axis-label">Timing</div>
+      <div class="axis-question">When is the report run?</div>
+      <div class="axis-option"><strong>Scheduled</strong> — recurring on a defined cadence (daily, weekly, quarterly). Users expect it to be available without requesting it.</div>
+      <div class="axis-option"><strong>Ad Hoc</strong> — run on demand for a one-time question, investigation, or specific need.</div>
+    </div>
+    <div class="axis-card gold">
+      <div class="axis-label">Type</div>
+      <div class="axis-question">Who built the report?</div>
+      <div class="axis-option"><strong>Standard (JIS Canned)</strong> — pre-built by JIS, fixed formats, served from the Data Lakehouse via Power BI.</div>
+      <div class="axis-option"><strong>Custom (Court-Specific)</strong> — built by a court's IT department to fill gaps that canned reports don't cover.</div>
+    </div>
+  </div>
+  <span class="slide-number">08</span>
+</section>
+
+<!-- ============================================================
+  09 — REPORTING TAXONOMY: 2×2 WITH AN EMPTY QUADRANT
+============================================================ -->
+<section class="slide slide-white" id="slide-9">
+  <div class="section-eyebrow reveal">Timing × Type, In Practice</div>
+  <h2 class="reveal reveal-delay-1">Four Quadrants. Three Real Categories.</h2>
+  <p class="reveal reveal-delay-2" style="max-width:980px; margin-top:4px; color:var(--atomic-med-gray);">
+    Crossing Timing (rows) × Type (columns) produces four quadrants, but only three exist in the wild.
+  </p>
+  <table class="taxonomy-matrix reveal reveal-delay-3">
+    <thead>
+      <tr>
+        <th class="corner"></th>
+        <th class="col-standard">Standard (JIS Canned)</th>
+        <th class="col-custom">Custom (Court-Specific)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th class="row-header row-scheduled">Scheduled</th>
+        <td>
+          <span class="quadrant-label">Standard + Scheduled</span>
+          Data Lakehouse → Power BI on a recurring cadence. <strong>The core of what the platform serves on MVP.</strong>
+        </td>
+        <td>
+          <span class="quadrant-label">Custom + Scheduled</span>
+          Court IT-built recurring reports. Platform must <strong>distribute</strong> these via a parallel path (CMS → mainframe → PDF → report store). E.g. Kent's Crystal Reports on CourtView; D36's Power BI over JIS DCS; Macomb's IT-built SQL reports.
+        </td>
+      </tr>
+      <tr>
+        <th class="row-header row-adhoc">Ad Hoc</th>
+        <td class="empty-quadrant">
+          <span class="quadrant-label">Doesn't exist in the wild</span>
+          Standard reports are scheduled by nature. Running one "outside its normal schedule" is a UI concern, not a distinct category.
+        </td>
+        <td>
+          <span class="quadrant-label">Custom + Ad Hoc</span>
+          Self-service report creation for one-time, investigative needs. E.g. Business Objects at Oakland. <strong>Lower priority for MVP.</strong>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="callout reveal reveal-delay-4">
+    <div class="callout-label">Key implication</div>
+    <p>The distribution platform must handle <strong>both quadrants on the Scheduled row</strong> — Data Lakehouse for standard reports, and a parallel CMS-originated path for custom reports. Ad hoc self-service is real but lower priority for MVP.</p>
+  </div>
+  <span class="slide-number">09</span>
+</section>
+
+<!-- ============================================================
+  08 — TODAY'S WORKAROUNDS
+============================================================ -->
+<section class="slide slide-white" id="slide-10">
+  <div class="section-eyebrow reveal">Today's Landscape</div>
+  <h2 class="reveal reveal-delay-1">Today's Workarounds Are Fragile and Court-Specific</h2>
+  <div class="reveal reveal-delay-2" style="max-width:940px; margin-top:10px;">
+    <p>Today, large courts have built their own reporting workarounds to support the scale of their high-volume caseloads and operational needs.</p>
+    <p style="margin-top:16px;">These solutions are fragile, court-specific, and dependent on institutional knowledge that walks out the door when key staff leave.</p>
+  </div>
+  <div class="callout red reveal reveal-delay-3">
+    <div class="callout-label">The gap</div>
+    <p>There is no shared reporting infrastructure across courts, no standard way to generate or distribute reports, and <strong>no path for courts onboarding to JIS to maintain their current reporting capabilities on the new platform.</strong></p>
+  </div>
+  <span class="slide-number">10</span>
+</section>
+
+<!-- ============================================================
+  09 — WHAT THAT LOOKS LIKE COURT BY COURT
+============================================================ -->
+<section class="slide slide-default" id="slide-11">
+  <div class="section-eyebrow reveal">Snapshot Examples · Courts Wildly Differ</div>
+  <h2 class="reveal reveal-delay-1">Every Court Tells a Different Story</h2>
+  <p class="reveal reveal-delay-2" style="max-width:960px; margin-top:4px; color:var(--atomic-med-gray);">
+    One representative snapshot per court. Same problem (CMS canned reports don't do enough), radically different workarounds — shaped by volume, staff capacity, vendor choices, and institutional knowledge.
+  </p>
+  <div class="pain-list reveal reveal-delay-3">
+    <div class="pain-item">
+      <div class="pain-court">Oakland</div>
+      <div class="pain-detail">137+ automated reports in a Java-based web service (Oak Reports), plus four other distribution channels</div>
+    </div>
+    <div class="pain-item">
+      <div class="pain-court">Kent</div>
+      <div class="pain-detail">~100 custom Crystal Reports maintained by a single IT person</div>
+    </div>
+    <div class="pain-item">
+      <div class="pain-court">D36 Detroit</div>
+      <div class="pain-detail">787+ saved reports with no search; Power BI layered on top of text file exports</div>
+    </div>
+    <div class="pain-item">
+      <div class="pain-court">Macomb</div>
+      <div class="pain-detail">Quarterly caseload memo takes nearly a full month, assembled entirely by hand</div>
+    </div>
+    <div class="pain-item">
+      <div class="pain-court">Wayne Circuit</div>
+      <div class="pain-detail">WebFocus pushing scheduled reports via email</div>
+    </div>
+  </div>
+  <div class="callout reveal reveal-delay-4">
+    <p>These are <strong>snapshots, not full pictures.</strong> Each court has many more workarounds than the one shown here — the detail lives in the individual court summaries. The takeaway: <strong>there is no shared reporting infrastructure, and no two courts have converged on the same solution.</strong></p>
+  </div>
+  <span class="slide-number">11</span>
+</section>
+
+<!-- ============================================================
+  10 — OAKLAND IS THE GATE
+============================================================ -->
+<section class="slide slide-white" id="slide-12">
+  <div class="section-eyebrow reveal">Why This Is Urgent</div>
+  <h2 class="reveal reveal-delay-1">Oakland: Why It's the Gate</h2>
+  <p class="reveal reveal-delay-2" style="max-width:960px; font-size:22px; color:var(--atomic-black); margin-top:8px;">
+    Oakland County is JIS's <strong>highest-priority onboarding target.</strong> They have explicitly stated that <strong>functional parity with their current reporting capabilities is a condition of JIS adoption.</strong>
+  </p>
+  <div class="callout red reveal reveal-delay-3">
+    <p>If the MiCourt Platform can't match Oakland's reporting at minimum, <strong>Oakland won't move.</strong></p>
+  </div>
+  <span class="slide-number">12</span>
+</section>
+
+<!-- ============================================================
+  13 — OAKLAND'S REPORTING CHANNELS
+============================================================ -->
+<section class="slide slide-white" id="slide-13">
+  <div class="section-eyebrow reveal">Oakland's Reporting Channels</div>
+  <h2 class="reveal reveal-delay-1">Not All Channels Are Equal</h2>
+  <p class="reveal reveal-delay-2" style="max-width:940px; color:var(--atomic-med-gray); margin-top:4px;">
+    Oakland operates five reporting channels, but they have a clear priority order. The MVP needs to match the first one. The rest are supporting context.
+  </p>
+  <div class="grid grid-3 reveal reveal-delay-3">
+    <div class="card red">
+      <div class="card-eyebrow">Primary — must have parity</div>
+      <h4>Oak Reports</h4>
+      <p>Java-based web service hosting 137+ automated reports with Okta SSO, tiered retention, department-level access control.</p>
+      <p><strong>Reports are inflexible:</strong> the format, data, filters, and parameters are all pre-determined. The main system that needs feature parity in MiCourt.</p>
+    </div>
+    <div class="card">
+      <div class="card-eyebrow">Secondary</div>
+      <h4>Business Objects</h4>
+      <p><strong>Flexible ad hoc analytics</strong> with merged data universes. Users can drag and drop fields in real time to define the report they need, essentially a Power BI sandbox.</p>
+      <p>Serves investigative needs that cross source systems.</p>
+    </div>
+    <div class="card muted">
+      <div class="card-eyebrow">Supporting infrastructure</div>
+      <h4>CICS print queues<br>JOS spool<br>Laserfiche workflows</h4>
+      <p>Lower priority, but part of Oakland's current landscape.</p>
+    </div>
+  </div>
+  <span class="slide-number">13</span>
+</section>
+
+<!-- ============================================================
+  14 — OAKLAND'S CURRENT REPORTING FLOW
+============================================================ -->
+<section class="slide slide-default" id="slide-14">
+  <div class="section-eyebrow reveal">Oakland Today · Current State Flow</div>
+  <h2 class="reveal reveal-delay-1">Oakland's Current Reporting Flow</h2>
+  <p class="reveal reveal-delay-2" style="max-width:960px; color:var(--atomic-med-gray); margin-top:4px;">
+    Heavily mainframe-dependent. Reports generate as PDFs stored on disk; two distribution channels (Oak Reports + Business Objects); users retrieve, view, and save manually.
+  </p>
+  <div class="flow-diagram reveal reveal-delay-3">
+    <div class="flow-group">
+      <div class="flow-group-label">CMS</div>
+      <div class="flow-node">
+        CMS
+        <div class="flow-node-sub">Case Management System<br>Source of Truth</div>
+      </div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-group">
+      <div class="flow-group-label">Report Generation</div>
+      <div class="flow-node">
+        Mainframe
+        <div class="flow-node-sub">(iSeries)</div>
+      </div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-node">
+        PDFs
+        <div class="flow-node-sub">(stored)</div>
+      </div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-group">
+      <div class="flow-group-label">Current Distribution</div>
+      <div class="flow-branch">
+        <div class="flow-node">
+          Oak Reports
+          <div class="flow-node-sub">scheduled + on-request</div>
+        </div>
+        <div class="flow-node">
+          Business Objects
+          <div class="flow-node-sub">ad hoc, sandbox</div>
+        </div>
+      </div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node" style="max-width:150px;">
+      Users
+      <div class="flow-node-sub">manual retrieve, view, and save/download</div>
+    </div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node" style="max-width:160px;">
+      Daily Business &amp; Operational Processes
+    </div>
+  </div>
+  <span class="slide-number">14</span>
+</section>
+
+<!-- ============================================================
+  15 — OAKLAND'S TARGET STATE FLOW ("PARITY PLUS")
+============================================================ -->
+<section class="slide slide-white" id="slide-15">
+  <div class="section-eyebrow reveal">Oakland Tomorrow · Target State Flow</div>
+  <h2 class="reveal reveal-delay-1">Target State: "Parity Plus"</h2>
+  <p class="reveal reveal-delay-2" style="max-width:960px; color:var(--atomic-med-gray); margin-top:4px;">
+    Standard reports flow through the <strong>JIS Data Lakehouse + Power BI</strong>; custom Oakland reports continue to generate via the mainframe. <strong>Both paths converge at a single Report Store</strong>, which AO's Platform Reporting layer sits on top of.
+  </p>
+  <div class="target-flow-grid reveal reveal-delay-3">
+    <!-- Row 1: Main flow -->
+    <div class="flow-group" style="grid-column: 1; grid-row: 1;">
+      <div class="flow-group-label">CMS</div>
+      <div class="flow-node">
+        CMS
+        <div class="flow-node-sub">Case Management System<br>Source of Truth</div>
+      </div>
+    </div>
+    <span class="flow-arrow" style="grid-column: 2; grid-row: 1;">→</span>
+    <div class="flow-group" style="grid-column: 3; grid-row: 1;">
+      <div class="flow-group-label">JIS Data &amp; Analytics</div>
+      <div class="flow-node" style="max-width:150px;">
+        JIS Data Lakehouse + Power BI
+        <div class="flow-node-sub">clean, transformed data</div>
+      </div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-node">
+        Output formats
+        <div class="flow-node-sub">CSV? / TXT? / PDF?</div>
+      </div>
+    </div>
+    <span class="flow-arrow" style="grid-column: 4; grid-row: 1;">→</span>
+    <div class="flow-group" style="grid-column: 5; grid-row: 1;">
+      <div class="flow-group-label">Report Store</div>
+      <div class="flow-node">Store</div>
+    </div>
+    <span class="flow-arrow flow-arrow-bi" style="grid-column: 6; grid-row: 1;">↔</span>
+    <div class="flow-group" style="grid-column: 7; grid-row: 1;">
+      <div class="flow-group-label">JIS Platform Reporting</div>
+      <ul class="flow-capability-list">
+        <li>Access Management <span>dept + user level, admin UI, public/private</span></li>
+        <li>Self-Service <span>filter, retrieve, view, download, print, saved filters</span></li>
+        <li>Retention <span>configurable rules, e.g. last 10 days daily</span></li>
+      </ul>
+    </div>
+    <span class="flow-arrow" style="grid-column: 8; grid-row: 1;">→</span>
+    <div class="flow-node" style="grid-column: 9; grid-row: 1;">Business Processes</div>
+
+    <!-- Row 2: Vertical connectors flanking the parallel path -->
+    <div class="grid-connector down" style="grid-column: 2; grid-row: 2;" aria-label="CMS also feeds parallel path">
+      <span class="conn-line"></span>
+      <span class="conn-arrow">▼</span>
+    </div>
+    <div class="grid-connector up" style="grid-column: 4; grid-row: 2;" aria-label="parallel path also feeds Report Store">
+      <span class="conn-line"></span>
+      <span class="conn-arrow">▲</span>
+    </div>
+
+    <!-- Row 3: Parallel path sized to match JIS Data & Analytics (col 3) -->
+    <div class="flow-group parallel-path" style="grid-column: 3; grid-row: 3;">
+      <div class="flow-group-label">Non-JIS, Custom Reports · Parallel Path</div>
+      <div class="parallel-inner-group">
+        <div class="flow-node highlight-gold">
+          Main Frame
+          <div class="flow-node-sub">(iSeries)</div>
+        </div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node highlight-gold">
+          Output formats
+          <div class="flow-node-sub">(PDFs)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="slide-number">15</span>
+</section>
+
+<!-- ============================================================
+  13 — IN SHORT (hero summary)
+============================================================ -->
+<section class="slide slide-default" id="slide-16">
+  <div class="section-eyebrow reveal">In Short</div>
+  <h2 class="reveal reveal-delay-1">Summary</h2>
+  <p class="reveal reveal-delay-2" style="max-width:900px; font-size:22px; margin-top:8px;">
+    Large courts need reports both to do their daily work and to meet their compliance obligations. Oakland's onboarding, JIS's top organizational priority, is gated on a credible reporting solution.
+  </p>
+  <span class="slide-number">16</span>
+</section>
+
+<!-- ============================================================
+  14 — SECTION DIVIDER: BUSINESS VALUE
+============================================================ -->
+<section class="slide slide-section divider" id="slide-17">
+  <div class="section-eyebrow reveal">Part Two</div>
+  <h2 class="reveal reveal-delay-1">JIS Business Value Delivery<br>&amp; Our (Atomic's) Goals</h2>
+  <span class="slide-number">17</span>
+</section>
+
+<!-- ============================================================
+  15 — WHY THIS MATTERS TO JIS
+============================================================ -->
+<section class="slide slide-white" id="slide-18">
+  <div class="section-eyebrow reveal">Business Value</div>
+  <h2 class="reveal reveal-delay-1">Why This Matters to JIS</h2>
+  <p class="reveal reveal-delay-2" style="max-width:920px; margin-top:8px;">
+    Reporting is one of six work streams in the 2026 Platform Enhancement contract, but it has outsized strategic importance because <strong>it directly gates Oakland County onboarding.</strong> Oakland onboarding is JIS's top organizational priority.
+  </p>
+  <div class="callout reveal reveal-delay-3">
+    <div class="callout-label">The three-to-five-year goal</div>
+    <p>JIS's goal is a statewide, unified, web-centric court case lifecycle management system. <strong>A scalable reporting solution is infrastructure that every court will need as they move onto the platform.</strong></p>
+  </div>
+  <span class="slide-number">18</span>
+</section>
+
+<!-- ============================================================
+  16 — CONTRACT COMMITMENTS
+============================================================ -->
+<section class="slide slide-default" id="slide-19">
+  <div class="section-eyebrow reveal">The SOW</div>
+  <h2 class="reveal reveal-delay-1">What the Contract Commits Us To</h2>
+  <p class="reveal reveal-delay-2" style="color:var(--atomic-med-gray); margin-top:4px;">
+    The SOW defines three outcomes.
+  </p>
+  <div class="numbered-list reveal reveal-delay-3" style="margin-top:var(--space-6);">
+    <div class="numbered-item">
+      <div class="numbered-badge" style="font-size:17px; min-width:38px; height:38px;">1</div>
+      <div>
+        <h4 style="font-size:19px;">Conduct a timeboxed RDP phase</h4>
+        <p style="font-size:16px;">Define MVP scope, establish collaboration patterns with the JIS Data &amp; Analytics team, and produce a validated roadmap.</p>
+      </div>
+    </div>
+    <div class="numbered-item">
+      <div class="numbered-badge" style="font-size:17px; min-width:38px; height:38px;">2</div>
+      <div>
+        <h4 style="font-size:19px;">Develop a modern report distribution interface</h4>
+        <p style="font-size:16px;">Centralized access to automated daily/weekly reports for court staff, integrated with the portal experience.</p>
+      </div>
+    </div>
+    <div class="numbered-item">
+      <div class="numbered-badge" style="font-size:17px; min-width:38px; height:38px;">3</div>
+      <div>
+        <h4 style="font-size:19px;">Pilot with a small court before Oakland deployment</h4>
+        <p style="font-size:16px;">Prove the solution at lower complexity before taking it to Oakland's scale.</p>
+      </div>
+    </div>
+  </div>
+  <span class="slide-number">19</span>
+</section>
+
+<!-- ============================================================
+  17 — AO SUCCESS
+============================================================ -->
+<section class="slide slide-white" id="slide-20">
+  <div class="section-eyebrow reveal">Atomic Object's Stake</div>
+  <h2 class="reveal reveal-delay-1">What Success Looks Like for Us</h2>
+  <p class="reveal reveal-delay-2" style="max-width:940px; color:var(--atomic-med-gray); margin-top:4px;">
+    We are the delivery partner responsible for building this, with a 12-month contract window (May 2026 – April 2027) to deliver reporting. <strong>We have a stake in the scope and features that get prioritized because we will be on the hook for delivering them.</strong>
+  </p>
+  <div class="grid grid-2 reveal reveal-delay-3">
+    <div class="card red">
+      <div class="card-eyebrow">Goal 1</div>
+      <h4>Arrive at 5/1 with a clear POV</h4>
+      <p>Walk into the JIS onsite with a defensible point of view on what the MVP should include.</p>
+    </div>
+    <div class="card">
+      <div class="card-eyebrow">Goal 2</div>
+      <h4>Be confident what we recommend is achievable</h4>
+      <p>Within the contract timeline.</p>
+    </div>
+    <div class="card gold">
+      <div class="card-eyebrow">Goal 3</div>
+      <h4>Advocate for delivery success, not feature ambition</h4>
+      <p>Push for decisions that set us up to ship.</p>
+    </div>
+    <div class="card green">
+      <div class="card-eyebrow">Goal 4</div>
+      <h4>Serve Oakland &amp; scale statewide</h4>
+      <p>Genuinely solve Oakland's blockers while remaining scalable to other courts.</p>
+    </div>
+  </div>
+  <span class="slide-number">20</span>
+</section>
+
+<!-- ============================================================
+  18 — CURRENT STATE (section setup)
+============================================================ -->
+<section class="slide slide-section" id="slide-21">
+  <div class="section-eyebrow reveal">Part Three</div>
+  <h2 class="reveal reveal-delay-1">Current State</h2>
+  <p class="key-message reveal reveal-delay-2">
+    Courts range from fully manual to partially automated. The variation is largely the result of courts developing in-house solutions or partnering with alternative vendors to meet their own reporting and operational needs — each independently investing in tools shaped by their volume, staff capacity, and technical resources.
+  </p>
+  <span class="slide-number">21</span>
+</section>
+
+<!-- ============================================================
+  19 — COURTS AND THEIR TECHNOLOGIES (big table)
+============================================================ -->
+<section class="slide slide-white" id="slide-22">
+  <div class="section-eyebrow reveal">Tooling at a Glance</div>
+  <h2 class="reveal reveal-delay-1">Courts and Their Technologies</h2>
+  <table class="tech-table reveal reveal-delay-2">
+    <thead>
+      <tr>
+        <th class="category-col">&nbsp;</th>
+        <th>Kent County</th>
+        <th>Macomb County</th>
+        <th>Oakland County</th>
+        <th>Wayne Circuit</th>
+        <th>D36 Detroit</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="category-cell">CMS</td>
+        <td>Court View</td>
+        <td>Court View</td>
+        <td>JCM</td>
+        <td class="odyssey-highlight">Odyssey</td>
+        <td class="forked-highlight">JIS DCS (forked)</td>
+      </tr>
+      <tr>
+        <td class="category-cell">E-Filing</td>
+        <td>WebTex Website Solution</td>
+        <td>MiFile</td>
+        <td>MiFile</td>
+        <td>Internal Tools + MiFile</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td class="category-cell">Document Processing</td>
+        <td>OnBase</td>
+        <td>OnBase</td>
+        <td>OnBase</td>
+        <td>Internal Tools + OnBase</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td class="category-cell">DMS</td>
+        <td>OnBase</td>
+        <td>OnBase</td>
+        <td>Laserfiche</td>
+        <td>Odyssey</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td class="category-cell">Judge's Bench</td>
+        <td>App Builder</td>
+        <td>Smart Bench</td>
+        <td>Laserfiche</td>
+        <td>OnBase + Odyssey</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td class="category-cell">Reporting</td>
+        <td>Crystal Reports (~100 custom)</td>
+        <td>CourtView (print-to-Excel)</td>
+        <td>Oak Reports, Business Objects, CICS, JOS spool, Laserfiche</td>
+        <td>WebFocus (scheduled + email)</td>
+        <td>JIS DCS native reports, Power BI (over text exports)</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="tech-footnote reveal reveal-delay-3">
+    <strong style="color:var(--atomic-red); font-style:normal;">On D36's setup:</strong> D36 uses a <strong style="font-style:normal;">forked version of JIS DCS</strong> (District Court System) with dozens of proprietary custom modules maintained by their in-house DMC Technology Group. New JIS releases require 8+ months of compatibility testing due to the customizations. Each DCS module (Civil, Traffic, Cash, plus the main module) has its own separate report generator, so the total reporting surface is larger than the ~787+ saved reports visible in the main generator alone.
+  </div>
+  <span class="slide-number">22</span>
+</section>
+
+<!-- ============================================================
+  20 — COURT MATURITY SUMMARY
+============================================================ -->
+<section class="slide slide-default" id="slide-23">
+  <div class="section-eyebrow reveal">Maturity at a Glance</div>
+  <h2 class="reveal reveal-delay-1">Court Maturity Summary</h2>
+  <table class="maturity-table reveal reveal-delay-2">
+    <thead>
+      <tr>
+        <th style="width:20%;">Court</th>
+        <th style="width:22%;">Maturity</th>
+        <th style="width:58%;">Headline</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="court-name">Oakland</td>
+        <td class="maturity-cell mature">Most mature</td>
+        <td>137+ automated reports via Oak Reports; process-driven automation for orders; no self-service; once-daily data refresh lag</td>
+      </tr>
+      <tr>
+        <td class="court-name">Wayne Circuit</td>
+        <td class="maturity-cell partial">Partially automated</td>
+        <td>WebFocus pushes scheduled reports via email; <strong>not prioritized for JIS onboarding</strong></td>
+      </tr>
+      <tr>
+        <td class="court-name">Kent</td>
+        <td class="maturity-cell manual">Self-serve but manual</td>
+        <td>~100 Crystal Reports maintained by one IT person; strong preference for human review before distribution</td>
+      </tr>
+      <tr>
+        <td class="court-name">D36 Detroit</td>
+        <td class="maturity-cell broken">Scale-broken</td>
+        <td>Reports take 4–5 hours; 787+ saved with no search; queue prioritization issues; quarterly compliance report sometimes arrives same day it's due</td>
+      </tr>
+      <tr>
+        <td class="court-name">Macomb</td>
+        <td class="maturity-cell fully-manual">Fully manual</td>
+        <td>Every report requires print-to-Excel; quarterly memo takes nearly a full month; judge rules in handwritten notes</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="slide-number">23</span>
+</section>
+
+<!-- ============================================================
+  21 — OAKLAND (expanded: includes access control)
+============================================================ -->
+<section class="slide slide-white" id="slide-24">
+  <div class="section-eyebrow reveal">Most Mature · Still Incomplete</div>
+  <h2 class="reveal reveal-delay-1">Oakland</h2>
+  <div class="reveal reveal-delay-2" style="max-width:940px; margin-top:8px;">
+    <p>Process-driven automation generates scheduling orders, show cause orders, and dismissal orders automatically. Business Objects serves ad hoc analytics needs with merged data universes spanning <strong>CMS, prosecutor, jail, and pre-trial data.</strong></p>
+    <p style="margin-top:14px;">Oak Reports uses <strong>Okta SSO</strong> with tiered retention and department-level access control. Oakland has requested a three-tier access model for MiCourt — <strong>the most granular access model of any court:</strong></p>
+  </div>
+  <div class="access-chain reveal reveal-delay-3">
+    JIS &nbsp;→&nbsp; Court Power Admin &nbsp;→&nbsp; Department Admin &nbsp;→&nbsp; Individual User
+  </div>
+  <div class="callout warn reveal reveal-delay-4">
+    <div class="callout-label">Despite this maturity</div>
+    <p>No on-demand self-service capability, and the system relies on once-daily data refreshes that create operational lag.</p>
+  </div>
+  <span class="slide-number">24</span>
+</section>
+
+<!-- ============================================================
+  22 — WAYNE CIRCUIT
+============================================================ -->
+<section class="slide slide-default" id="slide-25">
+  <div class="section-eyebrow reveal">Partially Automated</div>
+  <h2 class="reveal reveal-delay-1">Wayne Circuit</h2>
+  <div class="reveal reveal-delay-2" style="max-width:940px; margin-top:8px;">
+    <p>WebFocus generates scheduled reports and pushes them via email. Automated email distribution of reports is of interest across courts.</p>
+  </div>
+  <div class="callout warn reveal reveal-delay-3">
+    <div class="callout-label">Scope note</div>
+    <p>Wayne Circuit <strong>is not particularly interested in onboarding to JIS, and they are not a priority for JIS either.</strong> They are functional independently as-is, and onboarding Wayne Circuit is not in the current roadmap.</p>
+  </div>
+  <span class="slide-number">25</span>
+</section>
+
+<!-- ============================================================
+  23 — KENT
+============================================================ -->
+<section class="slide slide-white" id="slide-26">
+  <div class="section-eyebrow reveal">Self-Serve but Manual</div>
+  <h2 class="reveal reveal-delay-1">Kent</h2>
+  <div class="reveal reveal-delay-2" style="max-width:940px; margin-top:8px;">
+    <p>~100 custom Crystal Reports built and maintained by a single IT person, with same-day turnaround on new requests. No automated generation or distribution.</p>
+  </div>
+  <div class="callout warn reveal reveal-delay-3">
+    <div class="callout-label">A formative experience</div>
+    <p>Kent briefly tried automated email delivery but reverted after one report went out with incorrect information. <strong>That experience created a strong preference for human review before any automated distribution.</strong></p>
+  </div>
+  <span class="slide-number">26</span>
+</section>
+
+<!-- ============================================================
+  24 — D36 DETROIT (with queue prioritization)
+============================================================ -->
+<section class="slide slide-default" id="slide-27">
+  <div class="section-eyebrow reveal">Scale-Broken</div>
+  <h2 class="reveal reveal-delay-1">D36 Detroit</h2>
+  <div class="reveal reveal-delay-2" style="max-width:940px; margin-top:8px;">
+    <p>JIS's native reporting infrastructure fails at D36's volume. <strong>Reports that should take minutes take 4–5 hours.</strong> 787+ saved reports with no search capability.</p>
+    <p style="margin-top:14px;">Power BI is layered on top of text file exports as a fragile workaround. Staff run <strong>six separate reports and stitch them together in Power BI</strong> to get the view they need.</p>
+  </div>
+  <div class="callout warn reveal reveal-delay-3">
+    <div class="callout-label">Queue prioritization problem</div>
+    <p>JIS has prioritization coded into the report queue <strong>based on document type, not timeliness or deadline.</strong> D36 cannot see, review, or change how reports are prioritized. When a lower-priority report is actually urgent, staff must contact in-house IT to manually jump the queue.</p>
+  </div>
+  <div class="callout red reveal reveal-delay-4">
+    <p>The quarterly compliance report sometimes arrives <strong>the same day it's due.</strong></p>
+  </div>
+  <span class="slide-number">27</span>
+</section>
+
+<!-- ============================================================
+  25 — MACOMB
+============================================================ -->
+<section class="slide slide-white" id="slide-28">
+  <div class="section-eyebrow reveal">Fully Manual</div>
+  <h2 class="reveal reveal-delay-1">Macomb</h2>
+  <div class="reveal reveal-delay-2" style="max-width:940px; margin-top:8px;">
+    <p><strong>Macomb is fully manual.</strong> CourtView reports render as garbled characters on screen. Every report requires print-to-Excel-to-manual-formatting.</p>
+    <p style="margin-top:14px;"><strong>The quarterly caseload memo takes nearly a full month.</strong></p>
+    <p style="margin-top:14px;">Per-judge variability is the highest observed. Judge-specific rules live in handwritten notes and tribal knowledge rather than in any system.</p>
+  </div>
+  <span class="slide-number">28</span>
+</section>
+
+<!-- ============================================================
+  26 — SIX PATTERNS
+============================================================ -->
+<section class="slide slide-default" id="slide-29">
+  <div class="section-eyebrow reveal">Patterns That Hold Across All Five Courts</div>
+  <h2 class="reveal reveal-delay-1">Six Things We Heard Everywhere</h2>
+  <div class="grid grid-2 reveal reveal-delay-2" style="margin-top:var(--space-6);">
+    <div class="card">
+      <h4>Reports are the integration layer the CMS doesn't provide</h4>
+      <p>Staff use reports to join data the CMS stores in separate tables or systems. D36 stitches six reports in Power BI. Kent runs ad hocs to catch CMS errors. Oakland merges CMS, prosecutor, jail, and pre-trial data.</p>
+    </div>
+    <div class="card">
+      <h4>Reports function as work queues, not just information</h4>
+      <p>Oakland staff use daily reports as task lists. Kent clerks treat reports as assigned job duties. D36 analysts drive their entire workflow from report output.</p>
+    </div>
+    <div class="card red">
+      <h4>Automated generation and email distribution is a top ask</h4>
+      <p>Wayne already has it. Oakland has automated generation but not automated email distribution. Kent, Macomb, and D36 have none. Every court without it wants it first.</p>
+    </div>
+    <div class="card gold">
+      <h4>Human review before distribution is a strong requirement</h4>
+      <p>Kent's experience with one incorrect automated email created lasting distrust. Across courts, staff expressed a clear preference for a review or approval step before reports are distributed broadly.</p>
+    </div>
+    <div class="card purple">
+      <h4>Per-judge configurability is core, not edge case</h4>
+      <p>Every judge does things differently. Financial rules, notice preferences, scheduling timelines, distribution lists — all vary by judge.</p>
+    </div>
+    <div class="card green">
+      <h4>IT dependency for report creation is a universal bottleneck</h4>
+      <p>Every court depends on one or two IT people. Self-serve — or even configurable parameters — would reduce bottlenecks everywhere.</p>
+    </div>
+  </div>
+  <span class="slide-number">29</span>
+</section>
+
+<!-- ============================================================
+  27 — SECTION DIVIDER: USER PERSONAS
+============================================================ -->
+<section class="slide slide-section divider" id="slide-30">
+  <div class="section-eyebrow reveal">Part Four</div>
+  <h2 class="reveal reveal-delay-1">User Personas</h2>
+  <span class="slide-number">30</span>
+</section>
+
+<!-- ============================================================
+  28 — 4 PERSONAS
+============================================================ -->
+<section class="slide slide-white" id="slide-31">
+  <div class="section-eyebrow reveal">User Personas · 1 of 3</div>
+  <h2 class="reveal reveal-delay-1">Primary</h2>
+  <div class="persona-detail reveal reveal-delay-2">
+    <div class="persona-image primary">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+    </div>
+    <div class="persona-detail-content">
+      <div class="persona-kicker primary">Primary — Daily Power Users</div>
+      <h3>Court Operational Staff</h3>
+      <p>Clerk's office, case management, records/abstracting, financial/fines, scheduling. They pull daily or weekly reports and feed them into other business processes.</p>
+      <p style="margin-top:12px;"><strong>Not technical. Don't want to build reports.</strong> They want to open a hub, find their report, get to work.</p>
+    </div>
+  </div>
+  <span class="slide-number">31</span>
+</section>
+
+<!-- ============================================================
+  32 — SECONDARY PERSONA
+============================================================ -->
+<section class="slide slide-default" id="slide-32">
+  <div class="section-eyebrow reveal">User Personas · 2 of 3</div>
+  <h2 class="reveal reveal-delay-1">Secondary <span style="font-weight:400; color:var(--atomic-med-gray); font-size:28px;">(Oakland-specific)</span></h2>
+  <div class="persona-detail reveal reveal-delay-2">
+    <div class="persona-image secondary">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+    </div>
+    <div class="persona-detail-content">
+      <div class="persona-kicker secondary">Secondary — Admins</div>
+      <h3>Department Report Owners / Business Admins</h3>
+      <p>Senior clerks, supervisors, designated power users. They own specific reports, grant and revoke access, decide who sees what and how long reports are retained.</p>
+      <p style="margin-top:12px;">Oakland has requested a three-tier access model (JIS → court power admin → department admin → individual user) — <strong>the most granular version of this persona.</strong></p>
+    </div>
+  </div>
+  <span class="slide-number">32</span>
+</section>
+
+<!-- ============================================================
+  33 — TERTIARY PERSONAS (TWO ON ONE SLIDE)
+============================================================ -->
+<section class="slide slide-white" id="slide-33">
+  <div class="section-eyebrow reveal">User Personas · 3 of 3</div>
+  <h2 class="reveal reveal-delay-1">Tertiary</h2>
+  <p class="reveal reveal-delay-2" style="max-width:900px; color:var(--atomic-med-gray); margin-top:4px;">
+    Two audiences adjacent to the reporting platform — relevant to think about, but not the MVP's primary focus.
+  </p>
+  <div class="tertiary-pair reveal reveal-delay-3">
+    <div class="persona-detail">
+      <div class="persona-image">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      </div>
+      <div class="persona-detail-content">
+        <div class="persona-kicker tertiary">Tertiary — Consumers</div>
+        <h3>Judges &amp; Judicial Staff</h3>
+        <p>Consume reports but don't generate them. Motion call packets assembled for judges and routed to DMS. Some prefer print, some prefer PDF. Judge-level distribution and formatting preferences must be configurable.</p>
+      </div>
+    </div>
+    <div class="persona-detail">
+      <div class="persona-image">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      </div>
+      <div class="persona-detail-content">
+        <div class="persona-kicker tertiary">Tertiary — Out of MVP</div>
+        <h3>Analytics / Ad Hoc Users</h3>
+        <p>Power users who need one-time, investigative reports, often joining data across systems. Currently served by Business Objects (Oakland) or IT-mediated custom queries. <strong>Real persona, but out of scope for MVP.</strong></p>
+      </div>
+    </div>
+  </div>
+  <span class="slide-number">33</span>
+</section>
+
+<!-- ============================================================
+  30 — SECTION DIVIDER: KNOWN RISKS
+============================================================ -->
+<section class="slide slide-section divider" id="slide-34">
+  <div class="section-eyebrow reveal">Part Five</div>
+  <h2 class="reveal reveal-delay-1">Known Risks</h2>
+  <span class="slide-number">34</span>
+</section>
+
+<!-- ============================================================
+  31 — THE BIGGEST UNKNOWN (expanded)
+============================================================ -->
+<section class="slide slide-default" id="slide-35">
+  <div class="section-eyebrow reveal">The Central Risk</div>
+  <h2 class="reveal reveal-delay-1">The Biggest Unknown: JIS Data &amp; Analytics Collaboration</h2>
+  <p class="reveal reveal-delay-2" style="max-width:960px; margin-top:6px; font-size:20px; line-height:1.55;">
+    This team manages the data lakehouse and has made a set of standard reports available as <strong>embedded Power BI on the web.</strong> The SOW calls out establishing collaboration patterns with them — <strong>we haven't yet.</strong>
+  </p>
+  <div class="callout reveal reveal-delay-3" style="margin-top:var(--space-6);">
+    <div class="callout-label">Important context</div>
+    <p>The Data &amp; Analytics team is <strong>only one source of report creation.</strong> They are not in the business of recreating all of each court's reports. Some custom Oakland reports will continue to be generated through their existing upstream process (CMS → mainframe) and will need to be <strong>distributed by the platform without being recreated in the Data Lakehouse.</strong></p>
+  </div>
+  <p class="reveal reveal-delay-4" style="margin-top:var(--space-7); font-size:16px; color:var(--atomic-med-gray); font-style:italic;">
+    → Two things we don't know that shape everything downstream — see next slide.
+  </p>
+  <span class="slide-number">35</span>
+</section>
+
+<!-- ============================================================
+  35 — TWO THINGS WE DON'T KNOW (split from the Biggest Unknown)
+============================================================ -->
+<section class="slide slide-white" id="slide-36">
+  <div class="section-eyebrow reveal">The Central Risk · Continued</div>
+  <h2 class="reveal reveal-delay-1">Two Things We Don't Know</h2>
+  <p class="reveal reveal-delay-2" style="max-width:960px; margin-top:4px; color:var(--atomic-med-gray);">
+    Both shape everything downstream in the reporting work stream.
+  </p>
+  <div class="reveal reveal-delay-3" style="margin-top:var(--space-6);">
+    <h3 style="font-size:13px; color:var(--atomic-med-gray); font-family:var(--font-body); font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:0;">1. The catalog</h3>
+    <p style="margin-top:10px; font-size:16px; color:var(--atomic-black); max-width:960px; line-height:1.6;">
+      We don't yet know the full set of standard reports the D&amp;A team has made available. That gap shapes what the MVP can surface on day one. <strong>Some of Oakland's current Oak Reports may overlap with standard JIS reports already supported by the Data Lakehouse; some will not.</strong>
+    </p>
+  </div>
+  <div class="reveal reveal-delay-4" style="margin-top:var(--space-7);">
+    <h3 style="font-size:13px; color:var(--atomic-med-gray); font-family:var(--font-body); font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:0;">2. One-directional vs. bi-directional integration</h3>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th style="width:20%;">Mode</th>
+          <th style="width:55%;">What it looks like</th>
+          <th style="width:25%;">Complexity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="mode-name">One-directional</td>
+          <td>Surface standard reports; users interact via built-in Power BI filters and date pickers</td>
+          <td class="complexity easy">Straightforward</td>
+        </tr>
+        <tr>
+          <td class="mode-name">Bi-directional</td>
+          <td>Users can edit or create reports initiated from MiCourt Platform beyond standard interactions</td>
+          <td class="complexity hard">Significantly more complex</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-top:14px; font-size:15px; color:var(--atomic-med-gray); max-width:960px; line-height:1.55;">
+      <strong>Bi-directional</strong> means a report creation request flows from the platform back into the data source (whether the Data Lakehouse or another source) and a new report is then generated and served back up. This only applies to Data Lakehouse-served reports; custom reports generated upstream via mainframe/PDF are not editable through this path.
+    </p>
+    <p style="margin-top:12px; font-size:16px; color:var(--atomic-black); max-width:960px; font-weight:500;">
+      This decision sits between us, the D&amp;A team, and Oakland's expectations. <strong>It is the single biggest scope lever in the reporting work stream.</strong>
+    </p>
+  </div>
+  <span class="slide-number">36</span>
+</section>
+
+<!-- ============================================================
+  32 — OTHER KNOWN RISKS (7 consolidated)
+============================================================ -->
+<section class="slide slide-default" id="slide-37">
+  <div class="section-eyebrow reveal">Other Known Risks</div>
+  <h2 class="reveal reveal-delay-1">Seven More to Watch</h2>
+  <div class="numbered-list reveal reveal-delay-2" style="margin-top:var(--space-6);">
+    <div class="numbered-item">
+      <div class="numbered-badge gold">1</div>
+      <div>
+        <h4>Scope creep from Oakland's ambition</h4>
+        <p>Oakland has expressed interest in creation, editing, real-time data, and downstream workflow triggers. Each is reasonable in isolation; collectively they dwarf the contracted scope.</p>
+      </div>
+    </div>
+    <div class="numbered-item">
+      <div class="numbered-badge teal">2</div>
+      <div>
+        <h4>Access control alignment</h4>
+        <p>JIS is moving toward a groups-and-roles model while Oakland has requested more granular, department-level control. Resolving this gap early will help avoid design rework later.</p>
+      </div>
+    </div>
+    <div class="numbered-item">
+      <div class="numbered-badge purple">3</div>
+      <div>
+        <h4>Downstream process fit</h4>
+        <p>Additional discovery is needed on how reports are used in workflows to validate that output supports downstream business processes. Court users will want to say "can we automate this?" — closely related to scope management.</p>
+      </div>
+    </div>
+    <div class="numbered-item">
+      <div class="numbered-badge green">4</div>
+      <div>
+        <h4>Unique departmental needs</h4>
+        <p>Agree on MVP scope and manage scope creep for potential incremental or unique differences between departments.</p>
+      </div>
+    </div>
+    <div class="numbered-item">
+      <div class="numbered-badge teal">5</div>
+      <div>
+        <h4>Environment and data for testing</h4>
+        <p>We need a plan for environment and data setup to ensure different types of reports, formats, and filter needs are supported — and that software doesn't unintentionally break reports. Access to "real" Oakland reporting as controls? Small courts' replicated data?</p>
+      </div>
+    </div>
+    <div class="numbered-item">
+      <div class="numbered-badge gold">6</div>
+      <div>
+        <h4>SME access and scheduling dependencies</h4>
+        <p>We need clearly identified points of contact across JIS teams. Atomic Object's access to Oakland will be managed through JIS.</p>
+      </div>
+    </div>
+    <div class="numbered-item">
+      <div class="numbered-badge purple">7</div>
+      <div>
+        <h4>Variance in requirements across courts</h4>
+        <p>Risk of implementing a solution highly targeted to Oakland specs that will need to get reworked for other courts. Opportunities early to do additional light discovery with other courts, or include in the pilot?</p>
+      </div>
+    </div>
+  </div>
+  <span class="slide-number">37</span>
+</section>
+
+<!-- ============================================================
+  33 — BEFORE THE WORKSHOP
+============================================================ -->
+<section class="slide slide-title" id="slide-38">
+  <div class="section-eyebrow reveal">Before the Workshop</div>
+  <h1 class="reveal reveal-delay-1">Read Through.<br>Bring Questions.</h1>
+  <p class="subtitle reveal reveal-delay-2">
+    Check the <a href="https://docs.google.com/document/d/1WHa_WH17f8VbE5Qdcqlswd7y-cf9GoSI/edit?usp=drive_link&amp;ouid=107285503379251581198&amp;rtpof=true&amp;sd=true" target="_blank" rel="noopener" style="color:var(--atomic-teal); text-decoration:underline; font-weight:600;">accompanying worksheet</a> for specific questions to think about before we meet. Feel free to pre-send questions to Dan and Linda.
+  </p>
+  <span class="slide-number">38</span>
+</section>
+
+<!-- ============================================================
+  34 — SOURCES
+============================================================ -->
+<section class="slide slide-default" id="slide-39">
+  <div class="section-eyebrow reveal">Sources</div>
+  <h2 class="reveal reveal-delay-1">Where This Brief Comes From</h2>
+  <div class="reveal reveal-delay-2" style="margin-top:var(--space-6); max-width:900px;">
+    <ul style="list-style:none; padding-left:0;">
+      <li style="padding:12px 0; border-bottom:1px solid var(--atomic-light-gray);"><strong>SOW</strong> — <em>AtomicObject_StateOfMichigan_JIS_2026 Platform SOW, DRAFT v2.0</em></li>
+      <li style="padding:12px 0; border-bottom:1px solid var(--atomic-light-gray);"><strong>Court synthesis</strong> — <code style="font-family:var(--font-code); font-size:15px; background:var(--atomic-off-white); padding:2px 8px; border-radius:3px;">02-discovery/summaries/Reporting-Court-Synthesis-draft-2.0.md</code></li>
+      <li style="padding:12px 0; border-bottom:1px solid var(--atomic-light-gray);"><strong>Oakland handoff</strong> — <code style="font-family:var(--font-code); font-size:15px; background:var(--atomic-off-white); padding:2px 8px; border-radius:3px;">01-handoff/Oakland_Platform Reporting.md</code></li>
+      <li style="padding:12px 0; border-bottom:1px solid var(--atomic-light-gray);"><strong>Oakland design review</strong> — <code style="font-family:var(--font-code); font-size:15px; background:var(--atomic-off-white); padding:2px 8px; border-radius:3px;">2026-03-19_oakland-automated-reports-design-review.md</code></li>
+      <li style="padding:12px 0;"><strong>Court visit summaries</strong> — D36 · Kent · Macomb · Oakland · Wayne Circuit</li>
+    </ul>
+  </div>
+  <p class="reveal reveal-delay-3" style="margin-top:var(--space-6); font-size:15px; font-style:italic; color:var(--atomic-med-gray); max-width:900px;">
+    If you don't have access to these sources, ask Linda or Dan and we'll share them with you.
+  </p>
+  <span class="slide-number">39</span>
+</section>
+
+<script>
+  // Scroll-reveal via IntersectionObserver
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // Nav pill — slide counter + progress bar
+  const slides = document.querySelectorAll('.slide');
+  const slideCounter = document.getElementById('slide-counter');
+  const slideProgressFill = document.getElementById('slide-progress-fill');
+  const totalSlides = slides.length;
+  slideCounter.textContent = `1 / ${totalSlides}`;
+
+  function getCurrentSlideIndex() {
+    const scrollPosition = window.scrollY + window.innerHeight / 2;
+    for (let i = 0; i < slides.length; i++) {
+      const top = slides[i].offsetTop;
+      const bottom = top + slides[i].offsetHeight;
+      if (scrollPosition >= top && scrollPosition < bottom) return i;
+    }
+    return 0;
+  }
+  function updateSlideIndicator() {
+    const idx = getCurrentSlideIndex();
+    slideCounter.textContent = `${idx + 1} / ${totalSlides}`;
+    const pct = totalSlides > 1 ? (idx / (totalSlides - 1)) * 100 : 100;
+    slideProgressFill.style.width = Math.max(2, pct) + '%';
+  }
+  function throttle(fn, ms) {
+    let last = 0;
+    return function(...args) {
+      const now = Date.now();
+      if (now - last >= ms) { last = now; fn(...args); }
+    };
+  }
+  window.addEventListener('scroll', throttle(updateSlideIndicator, 100));
+  updateSlideIndicator();
+</script>
+
+</body>
+</html>
